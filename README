@@ -1,0 +1,11 @@
+# Rating system
+
+This package provides a rating system for FLOW3. It should supply everything that is needed for that purpose,
+and is inspired by the suggestions of http://schema.org/Rating.
+
+## Entity abstract
+
+![YUML representation](http://yuml.me/diagram/scruffy;/class/[RatingInterface|getBestRating();getWorstRating()]^-.-[AbstractRating|rater;value|getRater();setRater();getValue();setValue()], [AbstractRating]^-[Rating|getBestRating();getWorstRating()])
+
+The Rating may be implemented to your needs; use one rating class for each variant of upper/lower ratings; for example
+one for rating boundaries 1-5, and one for 0-10 or such.
