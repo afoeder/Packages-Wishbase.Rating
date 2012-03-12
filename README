@@ -5,7 +5,7 @@ and is inspired by the suggestions of http://schema.org/Rating.
 
 ## Entity abstract
 
-![YUML representation](http://yuml.me/diagram/scruffy;/class/[RatingInterface|getBestRating();getWorstRating()]^-.-[AbstractRating|rater;value|getRater();setRater();getValue();setValue()], [AbstractRating]^-[Rating|getBestRating();getWorstRating()])
+![YUML representation](http://yuml.me/diagram/scruffy;/class/%5BRatingInterface%7CgetBestRating%28%29%3BgetWorstRating%28%29%5D%5E-.-%5BAbstractRating%7Crater%3Bvalue%7CgetRater%28%29%3BsetRater%28%29%3BgetValue%28%29%3BsetValue%28%29%5D%2C+%5BAbstractRating%5D%5E-%5BRating%7CgetBestRating%28%29%3BgetWorstRating%28%29%5D)
 
 The Rating may be implemented to your needs; use one rating class for each variant of upper/lower ratings; for example
 one for rating boundaries 1-5, and one for 0-10 or such.
