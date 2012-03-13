@@ -5,7 +5,9 @@ and is inspired by the suggestions of http://schema.org/Rating.
 
 ## Entity abstract
 
-![YUML representation](http://yuml.me/diagram/scruffy;/class/[RatingInterface|getBestRating();getWorstRating()]^-.-[AbstractRating|rater;value|getRater();setRater();getValue();setValue()], [AbstractRating]^-[Rating|getBestRating();getWorstRating()])
+![YUML representation](http://yuml.me/diagram/scruffy;dir:LR;/class/%5BRatingInterface%5D%5E-.-implements%5BAbstractRating%5D%2C+%5BAbstractRating%5D%5E-extends%5BRating%7CgetBestRating%28%29%3BgetWorstRating%28%29%5D%2C+%5BRating%5D%3Cratings%2A-%5BYourModel%5D%2C+%5BRateableInterface%5D%5E-.-implements%5BYourModel%5D)
+
+([edit](http://yuml.me/diagram/scruffy;dir:LR;/class/edit/%5BRatingInterface%5D%5E-.-implements%5BAbstractRating%5D%2C+%5BAbstractRating%5D%5E-extends%5BRating%7CgetBestRating%28%29%3BgetWorstRating%28%29%5D%2C+%5BRating%5D%3Cratings%2A-%5BYourModel%5D%2C+%5BRateableInterface%5D%5E-.-implements%5BYourModel%5D))
 
 The Rating may be implemented to your needs; use one rating class for each variant of upper/lower ratings; for example
 one for rating boundaries 1-5, and one for 0-10 or such.
@@ -19,6 +21,7 @@ This requires you to implement the appropriate methods there, usually the additi
 like
 
 ```php
+<?php
 	/**
 	 * @var \Doctrine\Common\Collections\Collection<\Rating\Domain\Model\Rating>
 	 * @ORM\ManyToMany
@@ -70,9 +73,9 @@ This will result into the following markup (using the default template):
 	<meta content="319" itemprop="ratingCount">
 
 	<span itemprop="worstRating" class="rating rating-rated">1</span>
-	<span class="rating  rating-rated">2</span>
-	<span class="rating  rating-rated">3</span>
-	<span class="rating ">4</span>
-	<span itemprop="bestRating" class="rating ">5</span>
+	<span class="rating rating-rated">2</span>
+	<span class="rating rating-rated">3</span>
+	<span class="rating">4</span>
+	<span itemprop="bestRating" class="rating">5</span>
 </div>
 ```
