@@ -1,0 +1,14 @@
+{namespace r=Rating\ViewHelpers}
+
+<div itemprop="aggregateRating" itemscope="itemscope" itemtype="http://schema.org/AggregateRating">
+	<meta itemprop="ratingValue" content="{ratingAggregate.ratingValue}" />
+	<meta itemprop="ratingCount" content="{ratingAggregate.ratingCount}" />
+
+	<f:for each="{ratingAggregate.iterable}" as="rateValue">
+		<span class="rating {f:if(condition: '{rateValue} <= {ratingAggregate.ratingValue -> f:format.number(decimals: 0)}', then: 'rating-rated')}" {f:if(
+			condition: '{rateValue} == {ratingAggregate.worstRating}',
+			then: 'itemprop="worstRating"',
+			else: '{f:if(condition: \'{rateValue} == {ratingAggregate.bestRating}\', then: \'itemprop="bestRating"\')}'
+		)}>{rateValue}</span>
+	</f:for>
+</div>

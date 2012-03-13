@@ -1,5 +1,5 @@
 <?php
-namespace Rating\ViewHelpers\Widget;
+namespace Rating;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Rating".                     *
@@ -9,31 +9,28 @@ namespace Rating\ViewHelpers\Widget;
  * of the License, or (at your option) any later version.                 *
  *                                                                        */
 
-use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * Ratings ViewHelper
+ * Interface for objects that are allowed to be rated
  */
-class RatingViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+interface RateableInterface {
+	/**
+	 * @param \Rating\Domain\Model\Rating $rating
+	 * @return void
+	 */
+	public function addRating(\Rating\Domain\Model\Rating $rating);
 
 	/**
-	 * @var bool
+	 * @param \Rating\Domain\Model\Rating $rating
+	 * @return void
 	 */
-	protected $ajaxWidget = TRUE;
+	public function removeRating(\Rating\Domain\Model\Rating $rating);
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \Rating\ViewHelpers\Widget\Controller\RatingController
+	 * @return \Traversable
 	 */
-	protected $controller;
-
-	/**
-	 * @param object $object The target object to rate
-	 * @return string
-	 */
-	public function render($object) {
-		return $this->initiateSubRequest();
-	}
+	public function getRatings();
 }
+
 ?>

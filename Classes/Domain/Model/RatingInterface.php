@@ -47,6 +47,12 @@ interface RatingInterface {
 	 * @return \TYPO3\Party\Domain\Model\AbstractParty
 	 */
 	public function getRater();
+
+	/**
+	 * Returns an array representing directions for amount and values of rating "stars"
+	 * @return array
+	 */
+	public function getIterable();
 }
 
 ?>

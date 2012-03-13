@@ -49,6 +49,20 @@ abstract class AbstractRating implements RatingInterface {
 	public function getRater() {
 		return $this->rater;
 	}
+
+	/**
+	 * Returns an array representing directions for amount and values of rating "stars"
+	 *
+	 * @return array
+	 */
+	public function getIterable() {
+		$iterable = array();
+		for($i = $this->getWorstRating(); $i <= $this->getBestRating(); $i++) {
+			$iterable[] = $i;
+		}
+
+		return $iterable;
+	}
 }
 
 ?>

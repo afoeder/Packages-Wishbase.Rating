@@ -1,5 +1,5 @@
 <?php
-namespace Rating\ViewHelpers\Widget\Controller;
+namespace Rating\ViewHelpers\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Rating".                     *
@@ -9,29 +9,31 @@ namespace Rating\ViewHelpers\Widget\Controller;
  * of the License, or (at your option) any later version.                 *
  *                                                                        */
 
+use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * Rating controller
+ * Ratings ViewHelper
  */
-class RatingController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
+class RatingAggregateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	/**
-	 * @var array
+	 * @var bool
 	 */
-	protected $supportedFormats = array('json');
+	protected $ajaxWidget = TRUE;
 
 	/**
-	 * @var array
+	 * @FLOW3\Inject
+	 * @var \Rating\ViewHelpers\Widget\Controller\RatingAggregateController
 	 */
-	protected $viewFormatToObjectNameMap = array('json' => '\TYPO3\FLOW3\MVC\View\JsonView');
+	protected $controller;
 
 	/**
-	 * @return void
+	 * @param \Rating\RateableInterface $rateableObject The target object which is rateable
+	 * @return string
 	 */
-	public function indexAction() {
-		$this->view->assign('rateTarget', $this->widgetConfiguration['object']);
+	public function render(\Rating\RateableInterface $rateableObject) {
+		return $this->initiateSubRequest();
 	}
-
 }
 ?>
