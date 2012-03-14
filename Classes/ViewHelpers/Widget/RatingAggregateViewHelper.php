@@ -1,8 +1,8 @@
 <?php
-namespace Rating\ViewHelpers\Widget;
+namespace Wishbase\Rating\ViewHelpers\Widget;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Rating".                     *
+ * This script belongs to the FLOW3 package "Wishbase.Rating".                     *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -24,15 +24,15 @@ class RatingAggregateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetV
 
 	/**
 	 * @FLOW3\Inject
-	 * @var \Rating\ViewHelpers\Widget\Controller\RatingAggregateController
+	 * @var \Wishbase\Rating\ViewHelpers\Widget\Controller\RatingAggregateController
 	 */
 	protected $controller;
 
 	/**
-	 * @param \Rating\RateableInterface $rateableObject The target object which is rateable
+	 * @param \Wishbase\Rating\RateableInterface $rateableObject The target object which is rateable
 	 * @return string
 	 */
-	public function render(\Rating\RateableInterface $rateableObject) {
+	public function render(\Wishbase\Rating\RateableInterface $rateableObject) {
 		return $this->initiateSubRequest();
 	}
 }

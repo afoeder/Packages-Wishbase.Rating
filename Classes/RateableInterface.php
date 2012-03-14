@@ -1,5 +1,5 @@
 <?php
-namespace Rating;
+namespace Wishbase\Rating;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Rating".                     *
@@ -16,16 +16,16 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 interface RateableInterface {
 	/**
-	 * @param \Rating\Domain\Model\RatingInterface $rating
+	 * @param \Wishbase\Rating\Domain\Model\RatingInterface $rating
 	 * @return void
 	 */
-	public function addRating(\Rating\Domain\Model\RatingInterface $rating);
+	public function addRating(\Wishbase\Rating\Domain\Model\RatingInterface $rating);
 
 	/**
-	 * @param \Rating\Domain\Model\RatingInterface $rating
+	 * @param \Wishbase\Rating\Domain\Model\RatingInterface $rating
 	 * @return void
 	 */
-	public function removeRating(\Rating\Domain\Model\RatingInterface $rating);
+	public function removeRating(\Wishbase\Rating\Domain\Model\RatingInterface $rating);
 
 	/**
 	 * @return \Traversable

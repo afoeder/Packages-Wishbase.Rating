@@ -1,5 +1,5 @@
 <?php
-namespace Rating;
+namespace Wishbase\Rating;
 
 use \TYPO3\FLOW3\Package\Package as BasePackage;
 

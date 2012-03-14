@@ -1,8 +1,8 @@
 <?php
-namespace Rating\ViewHelpers\Widget\Controller;
+namespace Wishbase\Rating\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Rating".                     *
+ * This script belongs to the FLOW3 package "Wishbase.Rating".            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -29,7 +29,7 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	 * @return void
 	 */
 	public function indexAction() {
-		$ratingAggregate = new \Rating\Domain\Model\RatingAggregate($this->widgetConfiguration['rateableObject']);
+		$ratingAggregate = new \Wishbase\Rating\Domain\Model\RatingAggregate($this->widgetConfiguration['rateableObject']);
 		$ratingAggregate->initializeObject();
 
 		$this->view->assign('ratingAggregate', $ratingAggregate);

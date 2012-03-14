@@ -1,8 +1,8 @@
 <?php
-namespace Rating\Domain\Model;
+namespace Wishbase\Rating\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Rating".                     *
+ * This script belongs to the FLOW3 package "Wishbase.Rating".            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *

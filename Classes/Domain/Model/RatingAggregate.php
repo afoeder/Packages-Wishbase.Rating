@@ -1,8 +1,8 @@
 <?php
-namespace Rating\Domain\Model;
+namespace Wishbase\Rating\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Rating".                     *
+ * This script belongs to the FLOW3 package "Wishbase.Rating".            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -28,12 +28,12 @@ class RatingAggregate {
 	protected $objectManager;
 
 	/**
-	 * @var \Rating\RateableInterface Holds the object passed in via the constructor
+	 * @var \Wishbase\Rating\RateableInterface Holds the object passed in via the constructor
 	 */
 	protected $rateableObject;
 
 	/**
-	 * @var \Rating\Domain\Model\RatingInterface
+	 * @var \Wishbase\Rating\Domain\Model\RatingInterface
 	 */
 	protected $ratingInstance;
 
@@ -59,9 +59,9 @@ class RatingAggregate {
 
 	/**
 	 * Note that initializeObject has to be called after instanciation in order to get the values filled.
-	 * @var \Rating\RateableInterface $rateableObject
+	 * @var \Wishbase\Rating\RateableInterface $rateableObject
 	 */
-	public function __construct(\Rating\RateableInterface $rateableObject) {
+	public function __construct(\Wishbase\Rating\RateableInterface $rateableObject) {
 		$this->rateableObject = $rateableObject;
 	}
 
@@ -92,7 +92,7 @@ class RatingAggregate {
 
 	/**
 	 * Finds out what Rating instance is required for this Rating Collection, i.e. what type are the collection members of
-	 * @return \Rating\Domain\Model\RatingInterface
+	 * @return \Wishbase\Rating\Domain\Model\RatingInterface
 	 * @throws \Exception
 	 */
 	protected function getRatingInstance() {

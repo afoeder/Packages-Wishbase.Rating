@@ -1,6 +1,6 @@
-{namespace r=Rating\ViewHelpers}
+{namespace r=Wishbase\Rating\ViewHelpers}
 
-<div itemprop="aggregateRating" itemscope="itemscope" itemtype="http://schema.org/AggregateRating">
+<div itemprop="aggregateRating" itemscope="itemscope" itemtype="http://schema.org/AggregateRating" class="aggregateRating aggregateRating-{ratingAggregate.ratingValue -> f:format.number(decimals: 0)}of{ratingAggregate.bestRating}">
 	<meta itemprop="ratingValue" content="{ratingAggregate.ratingValue}" />
 	<meta itemprop="ratingCount" content="{ratingAggregate.ratingCount}" />
 
