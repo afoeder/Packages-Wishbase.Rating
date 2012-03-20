@@ -16,12 +16,16 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 interface RateableInterface {
 	/**
+	 * Consider adding an additional instanceof check inside your implementation in order to make sure that the
+	 * correct concrete rating is added.
 	 * @param \Wishbase\Rating\Domain\Model\RatingInterface $rating
 	 * @return void
 	 */
 	public function addRating(\Wishbase\Rating\Domain\Model\RatingInterface $rating);
 
 	/**
+	 * Consider adding an additional instanceof check inside your implementation in order to make sure that the
+	 * correct concrete rating is added.
 	 * @param \Wishbase\Rating\Domain\Model\RatingInterface $rating
 	 * @return void
 	 */

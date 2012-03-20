@@ -16,6 +16,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class RatingAggregate {
 	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Security\Context
+	 */
+	protected $securityContext;
+
+	/**
 	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
 	 * @FLOW3\Inject
 	 */
@@ -28,14 +34,14 @@ class RatingAggregate {
 	protected $objectManager;
 
 	/**
-	 * @var \Wishbase\Rating\RateableInterface Holds the object passed in via the constructor
-	 */
-	protected $rateableObject;
-
-	/**
 	 * @var \Wishbase\Rating\Domain\Model\RatingInterface
 	 */
 	protected $ratingInstance;
+
+	/**
+	 * @var \Wishbase\Rating\RateableInterface Holds the object passed in via the constructor
+	 */
+	protected $itemReviewed;
 
 	/**
 	 * @var integer
@@ -58,11 +64,16 @@ class RatingAggregate {
 	protected $worstRating;
 
 	/**
+	 * @var mixed
+	 */
+	protected $ownRating;
+
+	/**
 	 * Note that initializeObject has to be called after instanciation in order to get the values filled.
 	 * @var \Wishbase\Rating\RateableInterface $rateableObject
 	 */
 	public function __construct(\Wishbase\Rating\RateableInterface $rateableObject) {
-		$this->rateableObject = $rateableObject;
+		$this->itemReviewed = $rateableObject;
 	}
 
 	/**
@@ -73,14 +84,17 @@ class RatingAggregate {
 
 		$ratingCount = 0;
 		$ratingSum = 0;
+		$ownRating = NULL;
 
-		foreach ($this->rateableObject->getRatings() AS $rating) {
+		foreach ($this->itemReviewed->getRatings() AS $rating) {
 			if (!$rating instanceof $this->ratingInstance) {
 				continue;
-			} else {
-				$ratingCount++;
-				$ratingSum += $rating->getValue;
 			}
+			$ratingCount++;
+			$ratingSum += $rating->getValue();
+			#if ($rating->getRater() === $this->securityContext->getParty()) {
+			#	$ownRating = $rating->getValue();
+			#}
 		}
 
 		$this->ratingCount = $ratingCount;
@@ -88,6 +102,7 @@ class RatingAggregate {
 
 		$this->bestRating = $this->ratingInstance->getBestRating();
 		$this->worstRating = $this->ratingInstance->getWorstRating();
+		$this->ownRating = $ownRating;
 	}
 
 	/**
@@ -96,7 +111,7 @@ class RatingAggregate {
 	 * @throws \Exception
 	 */
 	protected function getRatingInstance() {
-		$className = get_class($this->rateableObject);
+		$className = $this->reflectionService->getClassNameByObject($this->itemReviewed);
 		$methodName = 'getRatings';
 		$methodTagsValues = $this->reflectionService->getMethodTagsValues($className, $methodName);
 		$returnType = current($methodTagsValues['return']);
@@ -106,6 +121,13 @@ class RatingAggregate {
 		} else {
 			throw new \Exception('Annotated return type of "' . $className . '::' . $methodName . '", which is "' . $returnType . '", gives no information about collection member type');
 		}
+	}
+
+	/**
+	 * @return \Wishbase\Rating\RateableInterface
+	 */
+	public function getItemReviewed() {
+		return $this->itemReviewed;
 	}
 
 	/**
@@ -120,6 +142,14 @@ class RatingAggregate {
 	 */
 	public function getWorstRating() {
 		return $this->worstRating;
+	}
+
+	/**
+	 * The user's own rating
+	 * return mixed
+	 */
+	public function getOwnRating() {
+		return $this->ownRating;
 	}
 
 	/**
@@ -141,6 +171,14 @@ class RatingAggregate {
 	 */
 	public function getIterable() {
 		return $this->ratingInstance->getIterable();
+	}
+
+	/**
+	 * Returns the class name of the responsible Rating instance
+	 * @return string
+	 */
+	public function getRatingClassName() {
+		return get_class($this->ratingInstance);
 	}
 }
 

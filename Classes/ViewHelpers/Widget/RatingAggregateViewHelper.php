@@ -29,6 +29,20 @@ class RatingAggregateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetV
 	protected $controller;
 
 	/**
+	 * @return array
+	 */
+	protected function getWidgetConfiguration() {
+		$widgetConfiguration = array();
+		$widgetConfiguration['rateableObject'] = $this->arguments['rateableObject'];
+
+		$ratingAggregate = new \Wishbase\Rating\Domain\Model\RatingAggregate($this->arguments['rateableObject']);
+		$ratingAggregate->initializeObject();
+		$widgetConfiguration['ratingAggregate'] = $ratingAggregate;
+
+		return $widgetConfiguration;
+	}
+
+	/**
 	 * @param \Wishbase\Rating\RateableInterface $rateableObject The target object which is rateable
 	 * @return string
 	 */

@@ -16,6 +16,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 	/**
+	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @FLOW3\Inject
+	 */
+	protected $persistenceManager;
+
+	/**
 	 * @var array
 	 */
 	protected $supportedFormats = array('json');
@@ -29,11 +35,32 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	 * @return void
 	 */
 	public function indexAction() {
-		$ratingAggregate = new \Wishbase\Rating\Domain\Model\RatingAggregate($this->widgetConfiguration['rateableObject']);
-		$ratingAggregate->initializeObject();
-
-		$this->view->assign('ratingAggregate', $ratingAggregate);
+		$this->view->assign('ratingAggregate', $this->widgetConfiguration['ratingAggregate']);
 	}
 
+	/**
+	 * @return void
+	 */
+	public function initializeRateAction() {
+		$intendedRatingClassName = $this->widgetConfiguration['ratingAggregate']->getRatingClassName();
+		$this->arguments['rating']->setDataType($intendedRatingClassName);
+	}
+
+	/**
+	 * @param \Wishbase\Rating\Domain\Model\RatingInterface $rating
+	 * @return void
+	 */
+	public function rateAction(\Wishbase\Rating\Domain\Model\RatingInterface $rating) {
+		$rateableObject = $this->widgetConfiguration['rateableObject'];
+
+		$rateableObject->addRating($rating);
+		$this->persistenceManager->update($rateableObject);
+
+		$this->view->assign('value', array(
+			'ratingClassName' => get_class($rating),
+			'isNewObject?' => $this->persistenceManager->isNewObject($rateableObject),
+			'rateableObjectClass' => get_class($rateableObject)
+		));
+	}
 }
 ?>
