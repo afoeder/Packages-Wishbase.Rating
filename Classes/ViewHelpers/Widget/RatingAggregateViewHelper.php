@@ -36,7 +36,6 @@ class RatingAggregateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetV
 		$widgetConfiguration['rateableObject'] = $this->arguments['rateableObject'];
 
 		$ratingAggregate = new \Wishbase\Rating\Domain\Model\RatingAggregate($this->arguments['rateableObject']);
-		$ratingAggregate->initializeObject();
 		$widgetConfiguration['ratingAggregate'] = $ratingAggregate;
 
 		return $widgetConfiguration;

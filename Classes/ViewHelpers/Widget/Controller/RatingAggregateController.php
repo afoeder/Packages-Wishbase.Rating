@@ -29,7 +29,7 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	/**
 	 * @var array
 	 */
-	protected $viewFormatToObjectNameMap = array('json' => '\TYPO3\FLOW3\MVC\View\JsonView');
+	protected $viewFormatToObjectNameMap = array('json' => '\TYPO3\FLOW3\Mvc\View\JsonView');
 
 	/**
 	 * @return void
