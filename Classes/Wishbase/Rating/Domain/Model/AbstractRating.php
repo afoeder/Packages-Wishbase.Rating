@@ -10,11 +10,11 @@ namespace Wishbase\Rating\Domain\Model;
  *                                                                        */
 
 use Doctrine\ORM\Mapping as ORM;
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Abstract Rating model. Implement your rating mechanism according to your need and setting.
- * @FLOW3\Entity
+ * @Flow\Entity
  * @ORM\InheritanceType("JOINED")
  */
 abstract class AbstractRating implements RatingInterface {

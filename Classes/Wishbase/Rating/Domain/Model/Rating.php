@@ -9,11 +9,11 @@ namespace Wishbase\Rating\Domain\Model;
  * of the License, or (at your option) any later version.                 *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Concrete rating model; intends to handle integer ratings within boundaries from 1 to 5.
- * @FLOW3\Entity
+ * @Flow\Entity
  */
 class Rating extends AbstractRating {
 	/**

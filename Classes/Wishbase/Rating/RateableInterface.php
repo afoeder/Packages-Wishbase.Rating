@@ -9,7 +9,7 @@ namespace Wishbase\Rating;
  * of the License, or (at your option) any later version.                 *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Interface for objects that are allowed to be rated

@@ -9,15 +9,15 @@ namespace Wishbase\Rating\ViewHelpers\Widget\Controller;
  * of the License, or (at your option) any later version.                 *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Rating controller
  */
 class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 	/**
-	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @FLOW3\Inject
+	 * @var \TYPO3\Flow\Persistence\PersistenceManagerInterface
+	 * @Flow\Inject
 	 */
 	protected $persistenceManager;
 
@@ -29,7 +29,7 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	/**
 	 * @var array
 	 */
-	protected $viewFormatToObjectNameMap = array('json' => '\TYPO3\FLOW3\Mvc\View\JsonView');
+	protected $viewFormatToObjectNameMap = array('json' => '\TYPO3\Flow\Mvc\View\JsonView');
 
 	/**
 	 * @return void
