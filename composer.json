@@ -1,0 +1,14 @@
+{
+    "name": "wishbase/rating",
+    "type": "typo3-flow-package",
+    "description": "Provides everything necessary to establish a rating system, inspired by http://schema.org/Rating",
+    "version": "",
+    "require": {
+        "typo3/flow": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Wishbase\\Rating": "Classes"
+        }
+    }
+}
