@@ -1,6 +1,6 @@
 # Rating system
 
-This package provides a rating system for FLOW3. It should supply everything that is needed for that purpose,
+This package provides a rating system for TYPO3 Flow. It should supply everything that is needed for that purpose,
 and is inspired by the suggestions of http://schema.org/Rating.
 
 ## Entity abstract
