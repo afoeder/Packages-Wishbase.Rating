@@ -15,6 +15,7 @@ use TYPO3\Flow\Annotations as Flow;
  * Rating controller
  */
 class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
+
 	/**
 	 * @var \TYPO3\Flow\Persistence\PersistenceManagerInterface
 	 * @Flow\Inject
@@ -24,7 +25,7 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	/**
 	 * @var array
 	 */
-	protected $supportedFormats = array('json');
+	protected $supportedMediaTypes = array('text/html', 'application/json');
 
 	/**
 	 * @var array
@@ -44,6 +45,9 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	public function initializeRateAction() {
 		$intendedRatingClassName = $this->widgetConfiguration['ratingAggregate']->getRatingClassName();
 		$this->arguments['rating']->setDataType($intendedRatingClassName);
+		$this->arguments['rating']->getPropertyMappingConfiguration()
+			->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE)
+			->allowProperties('value');
 	}
 
 	/**
