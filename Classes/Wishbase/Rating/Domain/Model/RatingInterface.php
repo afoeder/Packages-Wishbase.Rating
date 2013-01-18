@@ -29,19 +29,9 @@ interface RatingInterface {
 	public function getWorstRating();
 
 	/**
-	 * @param mixed $value
-	 */
-	public function setValue($value);
-
-	/**
 	 * @return mixed
 	 */
 	public function getValue();
-
-	/**
-	 * @param \TYPO3\Party\Domain\Model\AbstractParty $rater
-	 */
-	public function setRater($rater);
 
 	/**
 	 * @return \TYPO3\Party\Domain\Model\AbstractParty
@@ -52,7 +42,7 @@ interface RatingInterface {
 	 * Returns an array representing directions for amount and values of rating "stars"
 	 * @return array
 	 */
-	public function getIterable();
+	public static function getIterable();
 }
 
 ?>

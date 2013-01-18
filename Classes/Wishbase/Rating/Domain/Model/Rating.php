@@ -13,9 +13,16 @@ use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Concrete rating model; intends to handle integer ratings within boundaries from 1 to 5.
- * @Flow\Entity
+ * @Flow\ValueObject
  */
 class Rating extends AbstractRating {
+
+	/**
+	 * The best resp. the worst possible rating for this implementation. Override in concrete class appropriately.
+	 */
+	const BEST_RATING = '5';
+	const WORST_RATING = '1';
+
 	/**
 	 * The value (grade) of this rating
 	 * @var integer
@@ -23,27 +30,14 @@ class Rating extends AbstractRating {
 	protected $value;
 
 	/**
-	 * The highest value allowed in this rating system
+	 * Constructor
 	 *
-	 * @return float
-	 */
-	public function getBestRating() {
-		return 5;
-	}
-
-	/**
-	 * The lowest value allowed in this rating system
-	 *
-	 * @return float
-	 */
-	public function getWorstRating() {
-		return 1;
-	}
-
-	/**
+	 * @param \TYPO3\Party\Domain\Model\AbstractParty $rater
 	 * @param integer $value
+	 * @throws \InvalidArgumentException
 	 */
-	public function setValue($value) {
+	public function __construct(\TYPO3\Party\Domain\Model\AbstractParty $rater, $value) {
+		parent::__construct($rater);
 		if ($value > $this->getBestRating() || $value < $this->getWorstRating()) {
 			throw new \InvalidArgumentException('Given rating value "' . $value . '" must be between "' . $this->getWorstRating() . '" and "' . $this->getBestRating() . '".', 1331555838);
 		}
@@ -56,6 +50,7 @@ class Rating extends AbstractRating {
 	public function getValue() {
 		return $this->value;
 	}
+
 }
 
 ?>

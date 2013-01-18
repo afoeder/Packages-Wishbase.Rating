@@ -14,10 +14,17 @@ use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Abstract Rating model. Implement your rating mechanism according to your need and setting.
- * @Flow\Entity
+ * @Flow\ValueObject
  * @ORM\InheritanceType("JOINED")
  */
 abstract class AbstractRating implements RatingInterface {
+
+	/**
+	 * The best resp. the worst possible rating for this implementation. Override in concrete class appropriately.
+	 */
+	const BEST_RATING = '10';
+	const WORST_RATING = '1';
+
 	/**
 	 * @var \DateTime
 	 */
@@ -31,15 +38,10 @@ abstract class AbstractRating implements RatingInterface {
 
 	/**
 	 * Constructor
-	 */
-	public function __construct() {
-		$this->creationDate = new \DateTime();
-	}
-
-	/**
 	 * @param \TYPO3\Party\Domain\Model\AbstractParty $rater
 	 */
-	public function setRater($rater) {
+	public function __construct(\TYPO3\Party\Domain\Model\AbstractParty $rater) {
+		$this->creationDate = new \DateTime();
 		$this->rater = $rater;
 	}
 
@@ -51,18 +53,36 @@ abstract class AbstractRating implements RatingInterface {
 	}
 
 	/**
+	 * The highest value allowed in this rating system
+	 *
+	 * @return mixed
+	 */
+	public function getBestRating() {
+		return self::BEST_RATING;
+	}
+
+	/**
+	 * The lowest value allowed in this rating system
+	 *
+	 * @return mixed
+	 */
+	public function getWorstRating() {
+		return self::WORST_RATING;
+	}
+
+	/**
 	 * Returns an array representing directions for amount and values of rating "stars"
 	 *
 	 * @return array
 	 */
-	public function getIterable() {
+	public static function getIterable() {
 		$iterable = array();
-		for($i = $this->getWorstRating(); $i <= $this->getBestRating(); $i++) {
+		for($i = static::WORST_RATING; $i <= static::BEST_RATING; $i++) {
 			$iterable[] = $i;
 		}
-
 		return $iterable;
 	}
+
 }
 
 ?>

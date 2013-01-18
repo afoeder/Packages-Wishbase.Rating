@@ -10,6 +10,8 @@ namespace Wishbase\Rating\ViewHelpers\Widget\Controller;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use Wishbase\Rating\Domain\Model\RatingInterface,
+	Wishbase\Rating\RateableInterface;
 
 /**
  * Rating controller
@@ -17,20 +19,27 @@ use TYPO3\Flow\Annotations as Flow;
 class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 	/**
-	 * @var \TYPO3\Flow\Persistence\PersistenceManagerInterface
 	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
+
+	/**
+	 * @Flow\Inject
+	 * @var \Doctrine\Common\Persistence\ObjectManager
+	 */
+	protected $entityManager;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Context
+	 */
+	protected $securityContext;
 
 	/**
 	 * @var array
 	 */
 	protected $supportedMediaTypes = array('text/html', 'application/json');
-
-	/**
-	 * @var array
-	 */
-	protected $viewFormatToObjectNameMap = array('json' => '\TYPO3\Flow\Mvc\View\JsonView');
 
 	/**
 	 * @return void
@@ -43,28 +52,50 @@ class RatingAggregateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetC
 	 * @return void
 	 */
 	public function initializeRateAction() {
-		$intendedRatingClassName = $this->widgetConfiguration['ratingAggregate']->getRatingClassName();
-		$this->arguments['rating']->setDataType($intendedRatingClassName);
-		$this->arguments['rating']->getPropertyMappingConfiguration()
-			->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE)
-			->allowProperties('value');
+		$intendedRatingClassName = $this->widgetConfiguration['ratingAggregate']->getRatingImplementationClassName();
+		$this->arguments->getArgument('rating')
+			->setDataType($intendedRatingClassName)
+			->getPropertyMappingConfiguration()
+				->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE)
+				->allowProperties('value', 'rater');
+
+		$rawRequestRatingArgument = $this->request->getArgument('rating');
+		$rawRequestRatingArgument['rater'] = $this->securityContext->getParty();
+		$this->request->setArgument('rating', $rawRequestRatingArgument);
 	}
 
 	/**
 	 * @param \Wishbase\Rating\Domain\Model\RatingInterface $rating
-	 * @return void
+	 * @return string JSON
 	 */
 	public function rateAction(\Wishbase\Rating\Domain\Model\RatingInterface $rating) {
+		/** @var $rateableObject \Wishbase\Rating\RateableInterface */
 		$rateableObject = $this->widgetConfiguration['rateableObject'];
+		$rateableObjectClassName = get_class($rateableObject);
+		$identifier = $this->persistenceManager->getIdentifierByObject($rateableObject);
+		$reHydratedObject = $this->persistenceManager->getObjectByIdentifier($identifier, $rateableObjectClassName);
 
-		$rateableObject->addRating($rating);
-		$this->persistenceManager->update($rateableObject);
+		$this->removeRatingsAlreadyDoneByAuthenticatedParty($reHydratedObject);
 
-		$this->view->assign('value', array(
-			'ratingClassName' => get_class($rating),
-			'isNewObject?' => $this->persistenceManager->isNewObject($rateableObject),
-			'rateableObjectClass' => get_class($rateableObject)
-		));
+		$reHydratedObject->addRating($rating);
+		$this->persistenceManager->update($reHydratedObject);
+
+		return json_encode(array('rated' => $rating->getValue()));
+	}
+
+	/**
+	 * Removes all ratings from the currently logged in user
+	 * @param \Wishbase\Rating\RateableInterface $ratedObject
+	 * @return void
+	 */
+	protected function removeRatingsAlreadyDoneByAuthenticatedParty(RateableInterface $ratedObject) {
+		$securityContext = $this->securityContext;
+		$ratingsByParty = $ratedObject->getRatings()->filter(function(RatingInterface $rating) use ($securityContext) {
+			return $rating->getRater() === $securityContext->getParty();
+		});
+		foreach ($ratingsByParty AS $presentRating) {
+			$ratedObject->removeRating($presentRating);
+		}
 	}
 }
 ?>

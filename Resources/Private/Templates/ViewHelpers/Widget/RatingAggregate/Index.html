@@ -4,7 +4,7 @@
 	itemprop="aggregateRating"
 	itemscope="itemscope"
 	itemtype="http://schema.org/AggregateRating"
-	data-rating-action="{f:uri.widget(action: 'rate', ajax: 1, format: 'json')}"
+	data-rating-action="{f:widget.uri(action: 'rate', ajax: true, format: 'json')}"
 	class="aggregateRating aggregateRating-{ratingAggregate.ratingValue -> f:format.number(decimals: 0)}of{ratingAggregate.bestRating}">
 
 	<meta itemprop="ratingValue" content="{ratingAggregate.ratingValue}" />

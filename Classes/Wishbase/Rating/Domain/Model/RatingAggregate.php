@@ -15,6 +15,12 @@ use TYPO3\Flow\Annotations as Flow;
  * Aggregate rating model; not meant for persisting. Should be built on-fly from a given collection
  */
 class RatingAggregate {
+
+	/**
+	 * Regex pattern for matching an occurrence like \Foo\Bar\Collection<\Bar\Foo\Item> to "Bar\Foo\Item"
+	 */
+	const PATTERN_MATCH_MEMBER = '/(?:\\\\?\w+)+<\\\\((?:\\\\?\w+)+)>/';
+
 	/**
 	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Security\Context
@@ -34,9 +40,10 @@ class RatingAggregate {
 	protected $objectManager;
 
 	/**
-	 * @var \Wishbase\Rating\Domain\Model\RatingInterface
+	 * The responsible rating instance class name, implements \Wishbase\Rating\Domain\Model\RatingInterface
+	 * @var string
 	 */
-	protected $ratingInstance;
+	protected $ratingImplementationClassName;
 
 	/**
 	 * @var \Wishbase\Rating\RateableInterface Holds the object passed in via the constructor
@@ -80,28 +87,28 @@ class RatingAggregate {
 	 * @return void
 	 */
 	public function initializeObject() {
-		$this->ratingInstance = $this->getRatingInstance();
+		$this->ratingImplementationClassName = $this->findRatingImplementationClassName();
 
 		$ratingCount = 0;
 		$ratingSum = 0;
 		$ownRating = NULL;
 
 		foreach ($this->itemReviewed->getRatings() AS $rating) {
-			if (!$rating instanceof $this->ratingInstance) {
+			if (!is_a($rating, $this->ratingImplementationClassName)) {
 				continue;
 			}
 			$ratingCount++;
 			$ratingSum += $rating->getValue();
-			#if ($rating->getRater() === $this->securityContext->getParty()) {
-			#	$ownRating = $rating->getValue();
-			#}
+			if ($rating->getRater() === $this->securityContext->getParty()) {
+				$ownRating = $rating->getValue();
+			}
 		}
 
 		$this->ratingCount = $ratingCount;
 		$this->ratingValue = ($ratingCount > 0 ? $ratingSum / $ratingCount : $ratingCount);
 
-		$this->bestRating = $this->ratingInstance->getBestRating();
-		$this->worstRating = $this->ratingInstance->getWorstRating();
+		$this->bestRating = constant($this->ratingImplementationClassName . '::BEST_RATING');
+		$this->worstRating = constant($this->ratingImplementationClassName . '::WORST_RATING');
 		$this->ownRating = $ownRating;
 	}
 
@@ -110,17 +117,31 @@ class RatingAggregate {
 	 * @return \Wishbase\Rating\Domain\Model\RatingInterface
 	 * @throws \Exception
 	 */
-	protected function getRatingInstance() {
+	protected function findRatingImplementationClassName() {
 		$className = $this->reflectionService->getClassNameByObject($this->itemReviewed);
 		$methodName = 'getRatings';
 		$methodTagsValues = $this->reflectionService->getMethodTagsValues($className, $methodName);
 		$returnType = current($methodTagsValues['return']);
 		$matches = array();
-		if (preg_match('/(?:\\\\?\w+)+<((?:\\\\?\w+)+)>/', $returnType, $matches)) {
-			return $this->objectManager->get($matches[1]);
+		if (preg_match('' . self::PATTERN_MATCH_MEMBER . '', $returnType, $matches)) {
+			$possibleObjectName = $matches[1];
+			if (!$this->objectManager->isRegistered($possibleObjectName)) {
+				throw new \Exception('The object ' . $possibleObjectName . ', which is considered a rating implementation responsible for ' . $className . ', is not known to the object manager.', 1358439607);
+			} elseif (!$this->reflectionService->isClassImplementationOf($possibleObjectName, 'Wishbase\Rating\Domain\Model\RatingInterface')) {
+				throw new \Exception('The object ' . $possibleObjectName . ', which is considered a rating implementation responsible for ' . $className . ', does not implement Wishbase\Rating\Domain\Model\RatingInterface which is mandatory.', 1358439689);
+			} else {
+				return $possibleObjectName;
+			}
 		} else {
 			throw new \Exception('Annotated return type of "' . $className . '::' . $methodName . '", which is "' . $returnType . '", gives no information about collection member type');
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRatingImplementationClassName() {
+		return $this->ratingImplementationClassName;
 	}
 
 	/**
@@ -170,16 +191,9 @@ class RatingAggregate {
 	 * @return array
 	 */
 	public function getIterable() {
-		return $this->ratingInstance->getIterable();
+		return call_user_func(array($this->ratingImplementationClassName, 'getIterable'));
 	}
 
-	/**
-	 * Returns the class name of the responsible Rating instance
-	 * @return string
-	 */
-	public function getRatingClassName() {
-		return get_class($this->ratingInstance);
-	}
 }
 
 ?>
