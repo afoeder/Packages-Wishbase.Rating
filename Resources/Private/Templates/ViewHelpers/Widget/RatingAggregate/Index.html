@@ -9,10 +9,13 @@
 
 	<meta itemprop="ratingValue" content="{ratingAggregate.ratingValue}" />
 	<meta itemprop="ratingCount" content="{ratingAggregate.ratingCount}" />
+	<f:if condition="{ratingAggregate.ownRating}">
+		<meta itemprop="castRating" content="{ratingAggregate.ownRating}" />
+	</f:if>
 
 	<f:for each="{ratingAggregate.iterable}" as="rateValue">
 		<span
-			class="rating {f:if(condition: '{rateValue} <= {ratingAggregate.ratingValue -> f:format.number(decimals: 0)}', then: 'rating-rated')} {f:if(condition: '{rateValue} <= {ratingAggregate.ownRating}', then: 'rating-ownrated')}"
+			class="rating"
 			{f:if(
 				condition: '{rateValue} == {ratingAggregate.worstRating}',
 				then: 'itemprop="worstRating"',
