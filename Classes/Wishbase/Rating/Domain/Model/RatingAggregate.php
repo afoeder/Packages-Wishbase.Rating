@@ -99,7 +99,7 @@ class RatingAggregate {
 			}
 			$ratingCount++;
 			$ratingSum += $rating->getValue();
-			if ($rating->getRater() === $this->securityContext->getParty()) {
+			if ($this->securityContext->canBeInitialized() && $rating->getRater() === $this->securityContext->getParty()) {
 				$ownRating = $rating->getValue();
 			}
 		}
