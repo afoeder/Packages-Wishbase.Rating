@@ -26,11 +26,6 @@ abstract class AbstractRating implements RatingInterface {
 	const WORST_RATING = '1';
 
 	/**
-	 * @var \DateTime
-	 */
-	protected $creationDate;
-
-	/**
 	 * @var \TYPO3\Party\Domain\Model\AbstractParty
 	 * @ORM\ManyToOne(cascade={"all"})
 	 */
@@ -41,7 +36,6 @@ abstract class AbstractRating implements RatingInterface {
 	 * @param \TYPO3\Party\Domain\Model\AbstractParty $rater
 	 */
 	public function __construct(\TYPO3\Party\Domain\Model\AbstractParty $rater) {
-		$this->creationDate = new \DateTime();
 		$this->rater = $rater;
 	}
 
