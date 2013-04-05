@@ -99,9 +99,6 @@ class RatingAggregate {
 			}
 			$ratingCount++;
 			$ratingSum += $rating->getValue();
-			if ($this->securityContext->canBeInitialized() && $rating->getRater() === $this->securityContext->getParty()) {
-				$ownRating = $rating->getValue();
-			}
 		}
 
 		$this->ratingCount = $ratingCount;
@@ -109,7 +106,6 @@ class RatingAggregate {
 
 		$this->bestRating = constant($this->ratingImplementationClassName . '::BEST_RATING');
 		$this->worstRating = constant($this->ratingImplementationClassName . '::WORST_RATING');
-		$this->ownRating = $ownRating;
 	}
 
 	/**
@@ -170,6 +166,14 @@ class RatingAggregate {
 	 * return mixed
 	 */
 	public function getOwnRating() {
+		if ($this->ownRating === NULL) {
+			/** @var $rating RatingInterface */
+			foreach ($this->itemReviewed->getRatings() AS $rating) {
+				if ($this->securityContext->canBeInitialized() && $rating->getRater() === $this->securityContext->getParty()) {
+					$this->ownRating = $rating->getValue();
+				}
+			}
+		}
 		return $this->ownRating;
 	}
 
