@@ -88,22 +88,6 @@ class RatingAggregate {
 	 */
 	public function initializeObject() {
 		$this->ratingImplementationClassName = $this->findRatingImplementationClassName();
-
-		$ratingCount = 0;
-		$ratingSum = 0;
-		$ownRating = NULL;
-
-		foreach ($this->itemReviewed->getRatings() AS $rating) {
-			if (!is_a($rating, $this->ratingImplementationClassName)) {
-				continue;
-			}
-			$ratingCount++;
-			$ratingSum += $rating->getValue();
-		}
-
-		$this->ratingCount = $ratingCount;
-		$this->ratingValue = ($ratingCount > 0 ? $ratingSum / $ratingCount : $ratingCount);
-
 		$this->bestRating = constant($this->ratingImplementationClassName . '::BEST_RATING');
 		$this->worstRating = constant($this->ratingImplementationClassName . '::WORST_RATING');
 	}
@@ -181,6 +165,9 @@ class RatingAggregate {
 	 * @return int
 	 */
 	public function getRatingCount() {
+		if ($this->ratingCount === NULL) {
+			$this->fetchRatingCountAndValue();
+		}
 		return $this->ratingCount;
 	}
 
@@ -188,7 +175,27 @@ class RatingAggregate {
 	 * @return float
 	 */
 	public function getRatingValue() {
+		if ($this->ratingValue === NULL) {
+			$this->fetchRatingCountAndValue();
+		}
 		return $this->ratingValue;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function fetchRatingCountAndValue() {
+		$ratingCount = 0;
+		$ratingSum = 0;
+		foreach ($this->itemReviewed->getRatings() AS $rating) {
+			if (!is_a($rating, $this->ratingImplementationClassName)) {
+				continue;
+			}
+			$ratingCount++;
+			$ratingSum += $rating->getValue();
+		}
+		$this->ratingCount = $ratingCount;
+		$this->ratingValue = ($ratingCount > 0 ? $ratingSum / $ratingCount : $ratingCount);
 	}
 
 	/**
